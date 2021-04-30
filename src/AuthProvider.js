@@ -4,15 +4,17 @@ import firebase from "./config/firebase";
 const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [authUser, setAuthUser] = useState(false);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      setUser(user);
+      setAuthUser(user);
     });
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authUser}>{children}</AuthContext.Provider>
+  );
 };
 
 export { AuthContext, AuthProvider };

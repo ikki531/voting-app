@@ -1,17 +1,26 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../AuthService";
 import firebase from "../config/firebase";
-import { Redirect, Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
-const Login = ({ history }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const history = useHistory();
+
+  async function setdata() {
+    return getValues();
+  }
+
+  async function login() {
+    const userdata = await setdata();
     firebase
       .auth()
-      .signInWithEmailAndPassword(email, password)
+      .signInWithEmailAndPassword(userdata.email, userdata.password)
       .then(() => {
         history.push("/");
       })
@@ -19,18 +28,16 @@ const Login = ({ history }) => {
         alert("E-mailまたはPasswordが違います。");
         console.log(err);
       });
-  };
-
-  const user = useContext(AuthContext);
-
-  if (user) {
-    return <Redirect to="/" />;
   }
+
+  const handleLogin = () => {
+    login();
+  };
 
   return (
     <>
       <h1>ログイン</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(handleLogin)}>
         <div>
           <label htmlFor="email">メールアドレス</label>
           <input
@@ -38,10 +45,19 @@ const Login = ({ history }) => {
             id="email"
             name="email"
             placeholder="メールアドレス"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            {...register("email", {
+              required: "メールアドレスを入力してください",
+              pattern: {
+                value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
+                message: "正しいメールアドレスを入力してください",
+              },
+            })}
           />
+          {errors.email && (
+            <span style={{ fontWeight: "bold", color: "red" }}>
+              ※{errors.email.message}
+            </span>
+          )}
         </div>
         <div>
           <label htmlFor="password">パスワード</label>
@@ -50,10 +66,20 @@ const Login = ({ history }) => {
             id="password"
             name="password"
             placeholder="パスワード"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            {...register("password", {
+              required: "パスワードを入力してください。",
+              pattern: {
+                value: /^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}$/i,
+                message:
+                  "パスワードは英字1文字以上、数字1文字以上を含む8文字以上の半角英数字を入力してください",
+              },
+            })}
           />
+          {errors.password && (
+            <span style={{ fontWeight: "bold", color: "red" }}>
+              ※{errors.password.message}
+            </span>
+          )}
         </div>
         <button type="submit">ログイン</button>
       </form>
