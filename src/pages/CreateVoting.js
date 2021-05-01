@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../AuthProvider";
 import firebase from "../config/firebase";
+import { nanoid } from "nanoid";
 
 const CreateVoting = () => {
   const history = useHistory();
@@ -32,7 +33,7 @@ const CreateVoting = () => {
         const getUsers = snapshot.docs.map((doc) => {
           return {
             ...doc.data(),
-            docId: doc.id,
+            docid: doc.id,
           };
         });
         setUsers(getUsers);
@@ -61,7 +62,9 @@ const CreateVoting = () => {
       firebase.firestore().collection("questions").add({
         question: questionValue,
         answer1: answer1Value,
+        answer1Id: nanoid(),
         answer2: answer2Value,
+        answer2Id: nanoid(),
         timestamp: firebase.firestore.FieldValue.serverTimestamp(), //<-new Date()だとそのパソコンの時刻が使われるのでズレる場合を考慮してサーバーサイドの時刻を追加する
         username: users[0].username,
       });

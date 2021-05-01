@@ -1,13 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../AuthProvider";
 import firebase from "../../config/firebase";
+import CountVotes from "./CountVotes";
 
-const List = () => {
-  // ログインしてるならボタン押せる機能実装時使う？
-  const authUser = useContext(AuthContext);
-
+const VotesList = () => {
   const [questions, setQuestions] = useState(null);
-  const [value, setValue] = useState("");
 
   useEffect(() => {
     firebase
@@ -17,9 +14,12 @@ const List = () => {
       .onSnapshot((snapshot) => {
         const questions = snapshot.docs.map((doc) => {
           return {
+            username: doc.data().username,
             question: doc.data().question,
             answer1: doc.data().answer1,
+            answer1Id: doc.data().answer1Id,
             answer2: doc.data().answer2,
+            answer2Id: doc.data().answer2Id,
             // timestamp: doc.data().timestamp.toDate(), //この部分でfirebaseより取得
             // timestamp: doc
             //   .data({ serverTimestamps: "estimate" })
@@ -33,19 +33,13 @@ const List = () => {
 
   return (
     <>
-      <ol>
+      <ul>
         {questions?.map((question) => {
-          return (
-            <li key={question.docid}>
-              <span>{question.question}</span>
-              <button>{question.answer1}</button>
-              <button>{question.answer2}</button>
-            </li>
-          );
+          return <CountVotes question={question} key={question.docid} />;
         })}
-      </ol>
+      </ul>
     </>
   );
 };
 
-export default List;
+export default VotesList;
