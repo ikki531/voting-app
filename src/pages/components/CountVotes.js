@@ -25,6 +25,7 @@ const CountVotes = ({ question }) => {
   const [countAnswer2, setCountAnswer2] = useState([]);
 
   useEffect(() => {
+    // ログイン中のユーザー情報を取得
     firebase
       .firestore()
       .collection("users")
@@ -39,6 +40,7 @@ const CountVotes = ({ question }) => {
         setUsers(getUsers);
       });
 
+    // answer1に入った票を集計
     firebase
       .firestore()
       .collection("questions")
@@ -53,6 +55,7 @@ const CountVotes = ({ question }) => {
         setCountAnswer1(voteCountAnswer1);
       });
 
+    // answer2に入った票を集計
     firebase
       .firestore()
       .collection("questions")
@@ -72,11 +75,12 @@ const CountVotes = ({ question }) => {
   const [vote1, setVote1] = useState(false);
   const [vote2, setVote2] = useState(false);
 
+  // 選択肢1に投票した場合
   const votingAnswer1 = () => {
     // 未投票ならば、
     if (vote1 === false && vote2 === false) {
       //   console.log(`${users[0].id},${question.docid}`);
-      // dbのquestionsにuser情報を入れる
+      // dbのquestionsにuser情報を入れる(この中を数えて票数を数える)
       firebase
         .firestore()
         .collection("questions")
@@ -89,7 +93,7 @@ const CountVotes = ({ question }) => {
           usersid: users[0].id,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
-      // dbのusersにquestions情報を入れる
+      // dbのusersにquestions情報を入れる(ユーザーが回答したquestionが分かる)
       firebase
         .firestore()
         .collection("users")
@@ -103,7 +107,8 @@ const CountVotes = ({ question }) => {
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
       setVote1(true);
-    } else if (vote1 === true) {
+      // 選択肢1に投票している場合、dbの情報を消す
+    } else if (vote1 === true && vote2 === false) {
       firebase
         .firestore()
         .collection("questions")
@@ -136,14 +141,18 @@ const CountVotes = ({ question }) => {
           console.log(error);
         });
       setVote1(false);
+      // vote2のみ投票されている場合
     } else {
       alert("一人一票です。");
     }
   };
 
+  // 選択肢2に投票した場合
   const votingAnswer2 = () => {
+    // 未投票ならば
     if (vote1 === false && vote2 === false) {
       //   console.log(`${users[0].id},${question.docid}`);
+      // dbのquestionsにuser情報を入れる(この中を数えて票数を数える)
       firebase
         .firestore()
         .collection("questions")
@@ -156,7 +165,7 @@ const CountVotes = ({ question }) => {
           usersid: users[0].id,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
-
+      // dbのusersにquestions情報を入れる(ユーザーが回答したquestionが分かる)
       firebase
         .firestore()
         .collection("users")
@@ -170,7 +179,8 @@ const CountVotes = ({ question }) => {
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
       setVote2(true);
-    } else if (vote2 === true) {
+      // 選択肢2に投票している場合、dbの情報を消す
+    } else if ((vote1 === false && vote2) === true) {
       firebase
         .firestore()
         .collection("questions")
@@ -203,6 +213,7 @@ const CountVotes = ({ question }) => {
           console.log(error);
         });
       setVote2(false);
+      // vote1のみ投票されている場合
     } else {
       alert("一人一票です。");
     }
