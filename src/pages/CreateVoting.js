@@ -38,7 +38,7 @@ const CreateVoting = () => {
         });
         setUsers(getUsers);
       });
-  }, [authUser]);
+  }, [email]);
 
   const addVoting = (e) => {
     e.preventDefault();
@@ -52,10 +52,9 @@ const CreateVoting = () => {
     values.map((value) => {
       let valueReplace = value.value.replace(/\s+/g, "");
       if (valueReplace === "") {
-        alert(`${value.string}を入力してください。`);
-        return;
+        return alert(`${value.string}を入力してください。`);
       }
-      console.log(value);
+      return console.log(value);
     });
 
     if (questionValue !== "" && answer1Value !== "" && answer2Value !== "") {

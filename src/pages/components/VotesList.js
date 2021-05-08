@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../AuthProvider";
+import React, { useState, useEffect } from "react";
 import firebase from "../../config/firebase";
 import CountVotes from "./CountVotes";
 
@@ -7,6 +6,10 @@ const VotesList = () => {
   const [questions, setQuestions] = useState(null);
 
   useEffect(() => {
+    let disposed = false;
+    const dispose = () => {
+      disposed = true;
+    };
     firebase
       .firestore()
       .collection("questions")
@@ -20,15 +23,12 @@ const VotesList = () => {
             answer1Id: doc.data().answer1Id,
             answer2: doc.data().answer2,
             answer2Id: doc.data().answer2Id,
-            // timestamp: doc.data().timestamp.toDate(), //この部分でfirebaseより取得
-            // timestamp: doc
-            //   .data({ serverTimestamps: "estimate" })
-            //   .timestamp.toDate(), //serverTimestampが作成途中の時は見積もり時間を返してくれる
-            docid: doc.id, //<- keyを設定するためにidを所得　あとあと削除機能等をつけようと思った時にも便利
+            docid: doc.id, //<- keyを設定するためにidを取得、あとで削除機能等をつける
           };
         });
-        setQuestions(questions);
+        !disposed && setQuestions(questions);
       });
+    return dispose;
   }, []);
 
   return (

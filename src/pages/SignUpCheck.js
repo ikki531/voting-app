@@ -23,7 +23,7 @@ const SignUpCheck = () => {
         gender: history.location.state.gender,
       }
     );
-  }, []);
+  }, [history]);
 
   async function authsubmit() {
     firebase
@@ -37,13 +37,18 @@ const SignUpCheck = () => {
 
   async function dbsubmit() {
     const setdata = await authsubmit();
-    firebase.firestore().collection("users").add(setdata);
+    firebase
+      .firestore()
+      .collection("users")
+      .add(setdata)
+      .then(() => {
+        history.push("/");
+      });
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dbsubmit();
-    history.push("/");
   };
 
   return (

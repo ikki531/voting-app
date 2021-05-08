@@ -69,7 +69,7 @@ const CountVotes = ({ question }) => {
         });
         setCountAnswer2(voteCountAnswer2);
       });
-  }, []);
+  }, [email, question]);
 
   // 投票済みかどうかの確認
   const [vote1, setVote1] = useState(false);
