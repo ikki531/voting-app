@@ -1,8 +1,41 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../AuthProvider";
 import firebase from "../../config/firebase";
+import { Button, makeStyles } from "@material-ui/core";
 
 const CountVotes = ({ question }) => {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+    button: {
+      marginTop: "10px",
+      display: "flex",
+      justifyContent: "spaceBetween",
+      alignItems: "center",
+    },
+    buttonL: {
+      width: "100%",
+    },
+    buttonR: {
+      display: "flex",
+      width: "100%",
+      justifyContent: "flex-end",
+    },
+  }));
+
+  const classes = useStyles();
+
   const authUser = useContext(AuthContext);
   // firestoreから取得したuser情報を入れるステート
   const [users, setUsers] = useState(false);
@@ -244,40 +277,67 @@ const CountVotes = ({ question }) => {
   return (
     <li key={question.docid}>
       <br></br>
-      <h2 style={{ color: "green" }}>
-        　{question.username}　さんからみんなに質問
+      <h2 style={{ marginTop: "50px", fontSize: "130%", color: "green" }}>
+        {question.username}さんからみんなに質問
       </h2>
-      <span>{question.question}</span>
-      {colorButton1 ? (
-        <button
-          disabled={disabled}
-          onClick={votingAnswer1}
-          style={{ color: "red" }}
-        >
-          {question.answer1}
-          <span>{countAnswer1.length}</span>
-        </button>
-      ) : (
-        <button disabled={disabled} onClick={votingAnswer1}>
-          {question.answer1}
-          <span>{countAnswer1.length}</span>
-        </button>
-      )}
-      {colorButton2 ? (
-        <button
-          disabled={disabled}
-          onClick={votingAnswer2}
-          style={{ color: "red" }}
-        >
-          {question.answer2}
-          <span>{countAnswer2.length}</span>
-        </button>
-      ) : (
-        <button disabled={disabled} onClick={votingAnswer2}>
-          {question.answer2}
-          <span>{countAnswer2.length}</span>
-        </button>
-      )}
+      <h2 style={{ marginTop: "10px", fontSize: "200%" }}>
+        {question.question}
+      </h2>
+      <br></br>
+      <div className={classes.button}>
+        <div className={classes.buttonL}>
+          {colorButton1 ? (
+            <Button
+              size="large"
+              variant="contained"
+              color="secondary"
+              disabled={disabled}
+              onClick={votingAnswer1}
+              style={{}}
+            >
+              {question.answer1}
+              <span>{countAnswer1.length}</span>
+            </Button>
+          ) : (
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              disabled={disabled}
+              onClick={votingAnswer1}
+            >
+              {question.answer1}
+              <span>{countAnswer1.length}</span>
+            </Button>
+          )}
+        </div>
+        <div className={classes.buttonR}>
+          {colorButton2 ? (
+            <Button
+              size="large"
+              variant="contained"
+              color="secondary"
+              disabled={disabled}
+              onClick={votingAnswer2}
+              style={{}}
+            >
+              {question.answer2}
+              <span>{countAnswer2.length}</span>
+            </Button>
+          ) : (
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              disabled={disabled}
+              onClick={votingAnswer2}
+            >
+              {question.answer2}
+              <span>{countAnswer2.length}</span>
+            </Button>
+          )}
+        </div>
+      </div>
     </li>
   );
 };

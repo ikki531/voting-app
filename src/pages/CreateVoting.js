@@ -3,8 +3,49 @@ import { useHistory } from "react-router-dom";
 import { AuthContext } from "../AuthProvider";
 import firebase from "../config/firebase";
 import { nanoid } from "nanoid";
+import {
+  Button,
+  TextField,
+  makeStyles,
+  Container,
+  CssBaseline,
+  Typography,
+  Box,
+} from "@material-ui/core";
+import CopyRight from "../CopyRight";
 
 const CreateVoting = () => {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+    button: {
+      width: "110%",
+      marginTop: theme.spacing(3),
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonL: {
+      width: "100%",
+    },
+    buttonR: {
+      width: "100%",
+    },
+  }));
+
+  const classes = useStyles();
+
   const history = useHistory();
 
   const [questionValue, setQuestionValue] = useState("");
@@ -42,8 +83,8 @@ const CreateVoting = () => {
 
     let values = [
       { value: questionValue, string: "質問内容" },
-      { value: answer1Value, string: "選択肢1" },
-      { value: answer2Value, string: "選択肢2" },
+      { value: answer1Value, string: "選択肢①" },
+      { value: answer2Value, string: "選択肢②" },
     ];
 
     values.map((value) => {
@@ -83,32 +124,63 @@ const CreateVoting = () => {
 
   return (
     <>
-      <h1>投票を作成</h1>
-      <form onSubmit={addVoting}>
-        <input
-          type="text"
-          value={questionValue}
-          placeholder="質問内容を入力"
-          onChange={(e) => setQuestionValue(e.target.value)}
-        />
-        <br></br>
-        <input
-          type="text"
-          value={answer1Value}
-          placeholder="1.選択肢を入力"
-          onChange={(e) => setAnswer1Value(e.target.value)}
-        />
-        <br></br>
-        <input
-          type="text"
-          value={answer2Value}
-          placeholder="2.選択肢を入力"
-          onChange={(e) => setAnswer2Value(e.target.value)}
-        />
-        <br></br>
-        <button type="submit">送信</button>
-      </form>
-      <button onClick={() => history.push("/")}>キャンセル</button>
+      <Container component="main" maxWidth="sm">
+        <CssBaseline />
+
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h3">
+            投票を作成
+          </Typography>
+          <form onSubmit={addVoting}>
+            <TextField
+              id="question"
+              label="質問内容を入力"
+              name="question"
+              type="text"
+              value={questionValue}
+              onChange={(e) => setQuestionValue(e.target.value)}
+            />
+            <br></br>
+            <TextField
+              id="answer1"
+              label="1. 選択肢①を入力"
+              name="answer1"
+              type="text"
+              value={answer1Value}
+              onChange={(e) => setAnswer1Value(e.target.value)}
+            />
+            <br></br>
+            <TextField
+              id="answer2"
+              label="2. 選択肢②を入力"
+              name="answer2"
+              type="text"
+              value={answer2Value}
+              onChange={(e) => setAnswer2Value(e.target.value)}
+            />
+            <br></br>
+            <div className={classes.button}>
+              <div className={classes.buttonL}>
+                <Button variant="outlined" color="primary" type="submit">
+                  　送信　
+                </Button>
+              </div>
+              <div className={classes.buttonR}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => history.push("/")}
+                >
+                  キャンセル
+                </Button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <Box mt={8} marginBottom="30px">
+          <CopyRight />
+        </Box>
+      </Container>
     </>
   );
 };
