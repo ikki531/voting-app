@@ -5,17 +5,11 @@ import firebase from "../../config/firebase";
 const CountVotes = ({ question }) => {
   const authUser = useContext(AuthContext);
   // firestoreから取得したuser情報を入れるステート
-  const [users, setUsers] = useState([
-    {
-      birthday: "",
-      email: "",
-      gender: "",
-      id: "",
-      username: "",
-    },
-  ]);
+  const [users, setUsers] = useState(false);
+  // users && console.log(users[0].id);
   // ログインしていればemailを取得
   const email = authUser && authUser.email;
+  // console.log(authUser[0]);
 
   // ログイン状態によってButtonを制御
   const disabled = authUser ? false : true;
@@ -23,6 +17,16 @@ const CountVotes = ({ question }) => {
   //票数を入れるstate(counter.lengthで票数を表示)
   const [countAnswer1, setCountAnswer1] = useState([]);
   const [countAnswer2, setCountAnswer2] = useState([]);
+
+  // 現在どちらに投票しているか分かるようにする
+  // （ログイン中のuserが投票しているbuttonに色を付ける）
+  const [colorButton1, setColorButton1] = useState(false);
+  const [colorButton2, setColorButton2] = useState(false);
+  // ログインしていればidを取得
+  // users[0]の直後の"？."がないと、新規登録後エラーになる。
+  // usersにデータが入る前に画面がレンダリングされる事によるエラー。
+  // オプショナルチェイニング演算子"?."を使うことで、エラーとなるのではなく、undefinedを返してくれるようになる。
+  const usersId = authUser && users[0]?.id;
 
   useEffect(() => {
     // ログイン中のユーザー情報を取得
@@ -50,9 +54,21 @@ const CountVotes = ({ question }) => {
       .collection("vote")
       .onSnapshot((snap) => {
         const voteCountAnswer1 = snap.docs.map((doc) => {
-          return doc.data;
+          return doc.data();
         });
+        // console.log(countAnswer1);
         setCountAnswer1(voteCountAnswer1);
+        // console.log("2.answer1:" + countAnswer1);
+
+        // ログイン中のusers.idと等しいusers.idが各質問のanswer1にあるか判別
+        voteCountAnswer1.forEach(function (item1) {
+          // console.log(Object.values(item1));
+          const test1 = Object.values(item1).includes(usersId);
+          // console.log(test1);
+          // console.log(colorButton1);
+          test1 && setColorButton1(true);
+          // console.log(colorButton1);
+        });
       });
 
     // answer2に入った票を集計
@@ -65,20 +81,26 @@ const CountVotes = ({ question }) => {
       .collection("vote")
       .onSnapshot((snap) => {
         const voteCountAnswer2 = snap.docs.map((doc) => {
-          return doc.data;
+          return doc.data();
         });
         setCountAnswer2(voteCountAnswer2);
-      });
-  }, [email, question]);
 
-  // 投票済みかどうかの確認
-  const [vote1, setVote1] = useState(false);
-  const [vote2, setVote2] = useState(false);
+        // ログイン中のusers.idと等しいusers.idが各質問のanswer2にあるか判別
+        voteCountAnswer2.forEach(function (item2) {
+          // console.log(Object.values(item2));
+          const test2 = Object.values(item2).includes(usersId);
+          // console.log(test2);
+          // console.log(colorButton2);
+          test2 && setColorButton2(true);
+          // console.log(colorButton2);
+        });
+      });
+  }, [colorButton1, colorButton2, email, question, usersId]);
 
   // 選択肢1に投票した場合
   const votingAnswer1 = () => {
     // 未投票ならば、
-    if (vote1 === false && vote2 === false) {
+    if (colorButton1 === false && colorButton2 === false) {
       //   console.log(`${users[0].id},${question.docid}`);
       // dbのquestionsにuser情報を入れる(この中を数えて票数を数える)
       firebase
@@ -106,9 +128,9 @@ const CountVotes = ({ question }) => {
           quesrionid: question.docid,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
-      setVote1(true);
+      setColorButton1(true);
       // 選択肢1に投票している場合、dbの情報を消す
-    } else if (vote1 === true && vote2 === false) {
+    } else if (colorButton1 === true && colorButton2 === false) {
       firebase
         .firestore()
         .collection("questions")
@@ -140,8 +162,8 @@ const CountVotes = ({ question }) => {
         .catch((error) => {
           console.log(error);
         });
-      setVote1(false);
-      // vote2のみ投票されている場合
+      setColorButton1(false);
+      // 選択肢2のみ投票されている場合
     } else {
       alert("一人一票です。");
     }
@@ -150,7 +172,7 @@ const CountVotes = ({ question }) => {
   // 選択肢2に投票した場合
   const votingAnswer2 = () => {
     // 未投票ならば
-    if (vote1 === false && vote2 === false) {
+    if (colorButton1 === false && colorButton2 === false) {
       //   console.log(`${users[0].id},${question.docid}`);
       // dbのquestionsにuser情報を入れる(この中を数えて票数を数える)
       firebase
@@ -178,9 +200,9 @@ const CountVotes = ({ question }) => {
           quesrionid: question.docid,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
-      setVote2(true);
+      setColorButton2(true);
       // 選択肢2に投票している場合、dbの情報を消す
-    } else if ((vote1 === false && vote2) === true) {
+    } else if ((colorButton1 === false && colorButton2) === true) {
       firebase
         .firestore()
         .collection("questions")
@@ -212,8 +234,8 @@ const CountVotes = ({ question }) => {
         .catch((error) => {
           console.log(error);
         });
-      setVote2(false);
-      // vote1のみ投票されている場合
+      setColorButton2(false);
+      // 選択肢1のみ投票されている場合
     } else {
       alert("一人一票です。");
     }
@@ -226,14 +248,36 @@ const CountVotes = ({ question }) => {
         　{question.username}　さんからみんなに質問
       </h2>
       <span>{question.question}</span>
-      <button disabled={disabled} onClick={votingAnswer1}>
-        {question.answer1}
-        <span>{countAnswer1.length}</span>
-      </button>
-      <button disabled={disabled} onClick={votingAnswer2}>
-        {question.answer2}
-        <span>{countAnswer2.length}</span>
-      </button>
+      {colorButton1 ? (
+        <button
+          disabled={disabled}
+          onClick={votingAnswer1}
+          style={{ color: "red" }}
+        >
+          {question.answer1}
+          <span>{countAnswer1.length}</span>
+        </button>
+      ) : (
+        <button disabled={disabled} onClick={votingAnswer1}>
+          {question.answer1}
+          <span>{countAnswer1.length}</span>
+        </button>
+      )}
+      {colorButton2 ? (
+        <button
+          disabled={disabled}
+          onClick={votingAnswer2}
+          style={{ color: "red" }}
+        >
+          {question.answer2}
+          <span>{countAnswer2.length}</span>
+        </button>
+      ) : (
+        <button disabled={disabled} onClick={votingAnswer2}>
+          {question.answer2}
+          <span>{countAnswer2.length}</span>
+        </button>
+      )}
     </li>
   );
 };

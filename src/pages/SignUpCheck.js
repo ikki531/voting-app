@@ -13,16 +13,13 @@ const SignUpCheck = () => {
   useEffect(() => {
     setEmail(history.location.state.email);
     setPassword(history.location.state.password);
-    setUserData(
-      //   history.location.state
-      {
-        id: nanoid(),
-        username: history.location.state.username,
-        email: history.location.state.email,
-        birthday: history.location.state.birthday,
-        gender: history.location.state.gender,
-      }
-    );
+    setUserData({
+      id: nanoid(),
+      username: history.location.state.username,
+      email: history.location.state.email,
+      birthday: history.location.state.birthday,
+      gender: history.location.state.gender,
+    });
   }, [history]);
 
   async function authsubmit() {
@@ -85,11 +82,6 @@ const SignUpCheck = () => {
         </p>
       </div>
       <button onClick={handleSubmit}>登録</button>
-      {/* <button onClick={e => {
-        e.preventDefault()
-        console.log(userData)
-      }}>確認用</button> */}
-      {/* <button onClick={history.push("./signup")}>前のページに戻る</button> */}{" "}
     </>
   );
 };

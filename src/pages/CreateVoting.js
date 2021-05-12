@@ -17,9 +17,6 @@ const CreateVoting = () => {
   // AuthProviderからauthUserステートを受け取っている
   const authUser = useContext(AuthContext);
 
-  // ログイン状態によってButtonを制御
-  // const disabled = authUser ? false : true;
-
   // ログインしていればemailを取得
   const email = authUser && authUser.email;
 
