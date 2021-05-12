@@ -33,11 +33,13 @@ const VotesList = () => {
 
   return (
     <>
-      <ul>
-        {questions?.map((question) => {
-          return <CountVotes question={question} key={question.docid} />;
-        })}
-      </ul>
+      <div>
+        <ul>
+          {questions?.map((question) => {
+            return <CountVotes question={question} key={question.docid} />;
+          })}
+        </ul>
+      </div>
     </>
   );
 };

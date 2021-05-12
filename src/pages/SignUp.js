@@ -1,8 +1,37 @@
 import React from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import {
+  Button,
+  TextField,
+  MenuItem,
+  makeStyles,
+  Container,
+  CssBaseline,
+  Typography,
+  Box,
+} from "@material-ui/core";
+import CopyRight from "../CopyRight";
 
 const SignUp = () => {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+  }));
+
+  const classes = useStyles();
+
   const history = useHistory();
   const {
     register,
@@ -15,18 +44,46 @@ const SignUp = () => {
     history.push({ pathname: "./signup/check", state: getValues() });
   };
 
-  return (
-    <div>
-      <h1>新規登録</h1>
+  // material-ui Selectの選択肢
+  const genders = [
+    {
+      value: "男性",
+      label: "男性",
+    },
+    {
+      value: "女性",
+      label: "女性",
+    },
+    {
+      value: "その他",
+      label: "その他",
+    },
+  ];
+  // Select関連
+  const [gender, setGender] = React.useState("");
+  const handleChange = (event) => {
+    setGender(event.target.value);
+  };
 
-      <form onSubmit={handleSubmit(signUpCheck)}>
-        <div>
-          <label htmlFor="username">ユーザー名</label>
-          <input
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+          新規登録
+        </Typography>
+
+        <form className={classes.form} onSubmit={handleSubmit(signUpCheck)}>
+          <TextField
+            margin="normal"
+            // required
+            fullWidth
+            id="username"
+            label="ユーザー名"
+            variant="outlined"
             name="username"
             type="username"
-            id="username"
-            placeholder="ユーザー名"
+            autoFocus
             {...register("username", {
               required: "ユーザー名を入力してください",
             })}
@@ -36,15 +93,17 @@ const SignUp = () => {
               ※{errors.username.message}
             </span>
           )}
-        </div>
 
-        <div>
-          <label htmlFor="email">メールアドレス</label>
-          <input
+          <TextField
+            margin="normal"
+            // required
+            fullWidth
+            id="email"
+            label="メールアドレス"
+            variant="outlined"
             name="email"
             type="email"
-            id="email"
-            placeholder="メールアドレス"
+            autoFocus
             {...register("email", {
               required: "メールアドレスを入力してください",
               pattern: {
@@ -58,15 +117,16 @@ const SignUp = () => {
               ※{errors.email.message}
             </span>
           )}
-        </div>
 
-        <div>
-          <label htmlFor="password">パスワード</label>
-          <input
+          <TextField
+            margin="normal"
+            // required
+            fullWidth
+            id="password"
+            label="パスワード"
+            variant="outlined"
             name="password"
             type="password"
-            id="password"
-            placeholder="パスワード"
             {...register("password", {
               required: "パスワードを入力してください",
               pattern: {
@@ -81,13 +141,17 @@ const SignUp = () => {
               ※{errors.password.message}
             </span>
           )}
-        </div>
 
-        <div>
-          <label>生年月日</label>
-          <input
-            type="text"
-            placeholder="生年月日"
+          <TextField
+            margin="normal"
+            // required
+            fullWidth
+            id="birthday"
+            label="生年月日"
+            variant="outlined"
+            name="birthday"
+            type="birthday"
+            autoFocus
             {...register("birthday", {
               required: "生年月日を入力してください",
               pattern: {
@@ -101,33 +165,53 @@ const SignUp = () => {
               ※{errors.birthday.message}
             </span>
           )}
-        </div>
 
-        <div>
-          <label>性別</label>
-          <select
+          <TextField
+            margin="normal"
+            // required
+            fullWidth
             {...register("gender", {
               required: "性別を選択してください",
               pattern: {
                 message: "性別を選択してください",
               },
             })}
+            id="outlined-select-currency"
+            select
+            label="性別"
+            value={gender}
+            onChange={handleChange}
+            helperText="性別を選択してください"
+            variant="outlined"
           >
-            <option value=""></option>
-            <option value="男性">男性</option>
-            <option value="女性">女性</option>
-            <option value="その他">その他</option>
-          </select>
+            {genders.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
           {errors.gender && (
             <span style={{ fontWeight: "bold", color: "red" }}>
               ※{errors.gender.message}
             </span>
           )}
-        </div>
-        <button type="submit">確認画面</button>
-      </form>
-      <Link to="/login">ログインページ</Link>
-    </div>
+          <Button
+            fullWidth
+            className={classes.submit}
+            variant="outlined"
+            color="primary"
+            type="submit"
+          >
+            確認画面
+          </Button>
+        </form>
+        <br></br>
+        <Link to="/login">ログインページ</Link>
+      </div>
+      <Box mt={8}>
+        <CopyRight />
+      </Box>
+    </Container>
   );
 };
 
