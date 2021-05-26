@@ -42,7 +42,7 @@ const CountVotes = ({ question }) => {
   // users && console.log(users[0].id);
   // ログインしていればemailを取得
   const email = authUser && authUser.email;
-  // console.log(authUser[0]);
+  // console.log(authUser);
 
   // ログイン状態によってButtonを制御
   const disabled = authUser ? false : true;
@@ -75,6 +75,7 @@ const CountVotes = ({ question }) => {
           };
         });
         setUsers(getUsers);
+        // console.log(users);
       });
 
     // answer1に入った票を集計

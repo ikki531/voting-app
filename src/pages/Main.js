@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import VotesList from "./components/VotesList";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthProvider";
-import { Route } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import {
   Button,
   makeStyles,
@@ -47,12 +47,60 @@ const Main = ({ history }) => {
   const loginAlert = () => {
     alert("ログインしてください。");
   };
+  //////////////////////////////////////////////////////////////////////
+  ///// React Router試し用 /////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  // const [users, setUsers] = useState(null);
+  // console.log(users);
 
-  // console.log(user.displayName);
+  // usersコレクションの中身を全て取得してsetUsersに格納しています
+  // useEffect(() => {
+  //   firebase
+  //     .firestore()
+  //     .collection("users")
+  //     .onSnapshot((snapshot) => {
+  //       const users = snapshot.docs.map((doc) => {
+  //         return doc.data();
+  //       });
+
+  //       setUsers(users);
+  //     });
+  // }, []);
+
+  // console.log(users);
+  ////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////
+
   return (
     <>
       <Container component="main" maxWidth="sm">
         <CssBaseline />
+        {/* //////////////////////////////////////////////////////////////////////
+        ///// React Router試し用 /////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////// */}
+        {/* <button onClick={() => history.push("/userinfo")}>マイページ</button>
+        <br></br> */}
+        {/* <button onClick={() => history.push("/otheruserinfo")}>
+          他の人のページ
+        </button> */}
+        {/* users配列の中身の数だけ<Link>を生成しています */}
+        {/* {users?.map((user) => (
+          <> */}
+        {/* 説明②Routerのpathで'/users:id'の:idの部分はどんな文字列が渡ってきても<UserSecond/>に遷移と書いてあります。
+                     ${user.id}の部分にはfirestoreのusersコレクションから取得したidを渡しています
+                     例として上記のIDを渡して<UserInfoSecond/>のコンポーネントに遷移した際に,
+                     localhost:3000/userinfo/AgoxL9Vtt1MJum4m ← この最後の/以降の文字列が渡したIDの部分
+                     といったURLに変化します */}
+
+        {/* 以降の説明はUserInfoSecondへ */}
+        {/* <Link to={`userinfo/${user.id}`}>{user.username}</Link>
+            <br></br>
+          </>
+        ))} */}
+        {/* ////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////// */}
 
         <div className={classes.paper}>
           <div>
