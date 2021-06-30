@@ -7,6 +7,8 @@
 <img width="1101" alt="スクリーンショット 2021-06-15 21 25 48" src="https://user-images.githubusercontent.com/75568203/122052247-727cf800-ce20-11eb-8c54-ee4c01f2c495.png">
 
 # リンク
+https://vovovoting-app.herokuapp.com/
+<br>(heroku を使用してデプロイしました)
 
 # 使用技術
 ・JavaScript
@@ -15,9 +17,13 @@
 
 ・React
 
+・firebase
+
 ・Github
 <br>
 （実際の開発を意識して、Issues,Pull requests 等の機能の使用、ブランチを切ってからの開発もしてみました。）
+
+・heroku(デプロイ)
 
 # 機能一覧
 ・ユーザー登録機能
@@ -39,5 +45,3 @@
 　　○投票数表示機能
 <br>
 　　○投票結果表示機能
-  
-# テスト
