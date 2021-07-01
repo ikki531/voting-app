@@ -62,6 +62,20 @@ const Login = () => {
     login();
   };
 
+  ////////////////////// 匿名認証（ゲストユーザー）/////////////////////////////////
+  // const anonymousLogin = () => {
+  //   firebase
+  //     .auth()
+  //     .signInAnonymously()
+  //     .then(() => {
+  //       history.push("/");
+  //     })
+  //     .catch((err) => {
+  //       alert("ログインできませんでした。");
+  //       console.log(err);
+  //     });
+  // };
+
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -84,7 +98,8 @@ const Login = () => {
               {...register("email", {
                 required: "メールアドレスを入力してください",
                 pattern: {
-                  value: /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
+                  value:
+                    /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
                   message: "正しいメールアドレスを入力してください",
                 },
               })}
@@ -127,6 +142,17 @@ const Login = () => {
               ログイン
             </Button>
           </form>
+          {/* <Button
+            fullWidth
+            className={classes.submit}
+            size="large"
+            variant="contained"
+            color="secondary"
+            type="button"
+            onClick={anonymousLogin}
+          >
+            ゲストユーザーとしてログイン
+          </Button> */}
           <br></br>
           <Link to="/signup">新規登録ページ</Link>
         </div>

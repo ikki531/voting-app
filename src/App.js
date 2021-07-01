@@ -10,8 +10,8 @@ import { Reset } from "styled-reset";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { AuthProvider } from "./AuthProvider";
-import MyPage from "./pages/components/userinfo/MyPage";
-import OtherUserInfo from "./pages/components/userinfo/OtherUserInfo";
+// import MyPage from "./pages/components/userinfo/MyPage";
+// import OtherUserInfo from "./pages/components/userinfo/OtherUserInfo";
 
 const App = () => {
   return (

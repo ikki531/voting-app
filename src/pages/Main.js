@@ -1,8 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
+// import { useState, useEffect } from "react";
 import VotesList from "./components/VotesList";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthProvider";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Button,
   makeStyles,
@@ -83,7 +85,7 @@ const Main = ({ history }) => {
         <br></br> */}
         {/* <button onClick={() => history.push("/otheruserinfo")}>
           他の人のページ
-        </button> */}
+        </button>
         {/* users配列の中身の数だけ<Link>を生成しています */}
         {/* {users?.map((user) => (
           <> */}
@@ -101,7 +103,6 @@ const Main = ({ history }) => {
         {/* ////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////// */}
-
         <div className={classes.paper}>
           <div>
             <Typography component="h1" variant="h3">
